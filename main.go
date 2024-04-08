@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -28,11 +30,19 @@ func main() {
 		DB:             db,
 	}
 
+	dbg := flag.Bool("debug", false, "Enable debug mode")
+	flag.Parse()
+	if *dbg {
+		fmt.Println("Debugging enabled")
+	} else {
+		fmt.Println("Debugging disabled")
+	}
+
 	router := chi.NewRouter()
 
 	// Mount the file server for the /app/* path
-	fsHandler := http.StripPrefix("/app/", http.FileServer(http.Dir(filepathRoot)))
-	router.Mount("/app/", apiCfg.middlewareMetricsInc(middleware.Logger(fsHandler)))
+	fsHandler := http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot)))
+	router.Mount("/app", apiCfg.middlewareMetricsInc(middleware.Logger(fsHandler)))
 
 	// API router endpoints
 	apiRouter := chi.NewRouter()
@@ -41,6 +51,8 @@ func main() {
 	apiRouter.Get("/reset", apiCfg.handlerReset)
 	apiRouter.Post("/chirps", apiCfg.handlerChirpsCreate)
 	apiRouter.Get("/chirps", apiCfg.handlerChirpsRetrieve)
+	apiRouter.Get("/chirps/{id}", apiCfg.handlerChirpyIDRetrieve)
+	apiRouter.Post("/users", apiCfg.handlerUsersCreate)
 
 	// Admin endpoints
 	router.Get("/metrics", apiCfg.handlerMetrics)

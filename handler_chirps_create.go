@@ -25,7 +25,6 @@ func (cfg *apiConfig) handlerChirpsCreate(w http.ResponseWriter, r *http.Request
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters")
 		return
 	}
-	fmt.Printf("Request body %s\n", params.Body)
 
 	cleaned, err := validateChirp(params.Body)
 	if err != nil {
@@ -38,8 +37,7 @@ func (cfg *apiConfig) handlerChirpsCreate(w http.ResponseWriter, r *http.Request
 		respondWithError(w, http.StatusInternalServerError, "Couldn't create chirp")
 		return
 	}
-	fmt.Println("Hello There")
-	fmt.Println(chirp.Body)
+
 	respondWithJSON(w, http.StatusCreated, Chirp{
 		Body: chirp.Body,
 		ID:   chirp.ID,
