@@ -53,6 +53,7 @@ func main() {
 	apiRouter.Get("/chirps", apiCfg.handlerChirpsRetrieve)
 	apiRouter.Get("/chirps/{id}", apiCfg.handlerChirpyIDRetrieve)
 	apiRouter.Post("/users", apiCfg.handlerUsersCreate)
+	apiRouter.Post("/login", apiCfg.handlerUserLogin)
 
 	// Admin endpoints
 	router.Get("/metrics", apiCfg.handlerMetrics)
